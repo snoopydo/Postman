@@ -19,19 +19,18 @@ Use the Razor Engine that powers MVC views.  Can also be used in non MVC project
 
 **Simple Email Template.**  
 ```html
-    @{
-	    From = new System.Net.Mail.MailAddress(Model.From);
-	    To.Add(Model.To);
-        Subject = "Welcome to mysite.com";
-    }
+@{
+	From = new System.Net.Mail.MailAddress(Model.From);
+	To.Add(Model.To);
+	Subject = "Welcome to mysite.com";
+}
     
-    @functions {	// we support functions :)
-	    static int _counter = 1;
-	    int GetId() { return _counter++; }
-    }
+@functions {	// we support functions :)
+	static int _counter = 1;
+	int GetId() { return _counter++; }
+}
     
-    @section Text {		// This will be the text/plain alternative 
-	@GetId()
+@section Text {		// This will be the text/plain alternative 
 	Dear @Model.Name,
     
 	An account has been created for you.
@@ -41,23 +40,23 @@ Use the Razor Engine that powers MVC views.  Can also be used in non MVC project
 	@Model.LogOnUrl
     
 	Remember, we'll never ask for your password.
-    }
+	Counter: @GetId()
+}
     
-    @section Html {
+@section Html {
 	<body>
-		@GetId()
 		Dear @Model.Name,<br>
 		<p>An account has been created for you.<br />
 		Your account is FREE and allows you to perform bla bla features.<br />
 		To login and complete your profile, please go to:<br />
-	    <br />
+		<br />
 		<a href="@Model.LogOnUrl">@Model.LogOnUrl</a>
 		<br />
 		<img src="@EmbedResource("image.jpg")"  /><br />
-        <b>Remember, we'll never ask for your password.</b>
+		<b>Remember, we'll never ask for your password.</b>
 		</p>
 	</body>
-    }
+}
 ```
 
 **Usage:**  
@@ -66,8 +65,8 @@ Use the Razor Engine that powers MVC views.  Can also be used in non MVC project
 var service = new Postman.PostmanService();
 
 var model = new { From = "admin@localhost.com", To = "customer@localhost.com", Name = "Goober Shoes", LogOnUrl = "http://www.website.com/logon/" };
-var msg = service.Render("WelcomeMail.cshtml", model1);
-using (var smtp = new SmtpClient())
+var msg = service.Render("WelcomeMail.cshtml", model);
+using (var smtp = new System.Net.Mail.SmtpClient())
 {
 	smtp.Send(msg);
 }
